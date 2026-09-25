@@ -1,6 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { computeStats, useStore } from "@/lib/store";
-...
+
+export const Route = createFileRoute("/app/leaderboard")({
+  head: () => ({
+    meta: [
+      { title: "Leaderboard — IoT SimLab" },
+      { name: "description", content: "Team rankings for the IoT Simulation Challenge." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: Leaderboard,
+});
+
+function Leaderboard() {
+  const { state } = useStore();
+  const stats = computeStats(state);
   const rows = [
     { team: state.team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved },
   ].sort((a, b) => b.score - a.score);
