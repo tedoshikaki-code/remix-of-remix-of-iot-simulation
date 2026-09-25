@@ -12,6 +12,7 @@ import {
   adminMe,
   adminOverview,
   adminSetRole,
+  adminSetUserPassword,
   adminUsers,
   type AdminRegistration,
 } from "@/lib/admin.functions";
@@ -194,6 +195,7 @@ function AdminPortal() {
   const usersFn = useServerFn(adminUsers);
   const setRoleFn = useServerFn(adminSetRole);
   const deleteMsgFn = useServerFn(adminDeleteMessage);
+  const setPasswordFn = useServerFn(adminSetUserPassword);
 
   const [mode, setMode] = useState<"checking" | "login" | "portal">("checking");
   const [tab, setTab] = useState<Tab>("overview");
@@ -251,6 +253,17 @@ function AdminPortal() {
       toast.success("Message deleted.");
     } catch {
       toast.error("Could not delete the message.");
+    }
+  };
+
+  const resetPassword = async (userId: string, label: string) => {
+    const password = window.prompt(`New password for ${label}:`);
+    if (!password) return;
+    try {
+      await setPasswordFn({ data: { userId, password } });
+      toast.success(`Password updated for ${label}.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not update the password.");
     }
   };
 
@@ -441,6 +454,12 @@ function AdminPortal() {
                           participant
                         </span>
                       )}
+                      <button
+                        onClick={() => void resetPassword(u.id, u.username || u.email)}
+                        className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
+                      >
+                        Set password
+                      </button>
                     </div>
                   </div>
                 ))}

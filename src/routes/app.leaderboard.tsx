@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { computeStats, useStore } from "@/lib/store";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { getLeaderboard } from "@/lib/leaderboard.functions";
 
 export const Route = createFileRoute("/app/leaderboard")({
   head: () => ({
@@ -13,11 +17,21 @@ export const Route = createFileRoute("/app/leaderboard")({
 });
 
 function Leaderboard() {
-  const { state } = useStore();
-  const stats = computeStats(state);
-  const rows = [
-    { team: state.team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved },
-  ].sort((a, b) => b.score - a.score);
+  const fetchBoard = useServerFn(getLeaderboard);
+  const board = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: () => fetchBoard(),
+    refetchInterval: 15000,
+  });
+  const { data: me } = useQuery({
+    queryKey: ["leaderboard-me"],
+    queryFn: async () => (await supabase.auth.getUser()).data.user?.id ?? null,
+  });
+  useEffect(() => {
+    void board.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const rows = board.data?.rows ?? [];
 
   return (
     <div>
@@ -35,13 +49,16 @@ function Leaderboard() {
             </tr>
           </thead>
           <tbody>
+            {board.isLoading && (
+              <tr><td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">Loading…</td></tr>
+            )}
+            {!board.isLoading && rows.length === 0 && (
+              <tr><td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">No registered teams yet.</td></tr>
+            )}
             {rows.map((r, i) => {
-              const you = r.team === (state.team?.teamName ?? "Your Team");
+              const you = r.userId === me;
               return (
-                <tr
-                  key={r.team}
-                  className={`border-t border-border ${you ? "bg-cyan/5 text-cyan" : ""}`}
-                >
+                <tr key={r.userId} className={`border-t border-border ${you ? "bg-cyan/5 text-cyan" : ""}`}>
                   <td className="px-4 py-3 font-mono">#{i + 1}</td>
                   <td className="px-4 py-3 font-medium">
                     {r.team} {you && <span className="text-xs">(you)</span>}
