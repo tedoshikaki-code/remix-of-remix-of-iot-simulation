@@ -93,18 +93,6 @@ function LoginPage() {
     navigate({ to: "/app" });
   };
 
-  const google = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed. Please try again.");
-      return;
-    }
-    if (result.redirected) return;
-    await refreshStore();
-    navigate({ to: "/app" });
-  };
 
   return (
     <div ref={stageRef} className="relative grid min-h-screen overflow-hidden lg:grid-cols-2">
