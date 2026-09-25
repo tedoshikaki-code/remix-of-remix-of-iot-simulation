@@ -6,7 +6,6 @@ import authImg from "@/assets/auth-hero.jpg";
 import { AuthParticles } from "@/components/AuthParticles";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshStore, useStore } from "@/lib/store";
 
@@ -220,33 +219,6 @@ function LoginPage() {
               Login
             </button>
           </form>
-
-          <div className="my-6 flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> OR <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <button
-            onClick={() => void google()}
-            className="animate-auth-rise flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-surface/70 py-3.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent"
-            style={{ animationDelay: "470ms" }}
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-              <path
-                fill="#4285F4"
-                d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.1h6.6c-.1 1.1-.9 2.8-2.5 3.9l3.8 2.9c2.2-2 3.6-5 3.6-8.7z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.2 0-5.9-2.1-6.9-5l-4 3.1C3.2 21.3 7.3 24 12 24z"
-              />
-              <path fill="#FBBC05" d="M5.1 14.4a7.4 7.4 0 0 1 0-4.8l-4-3.1a12 12 0 0 0 0 11z" />
-              <path
-                fill="#EA4335"
-                d="M12 4.7c2.3 0 3.8 1 4.7 1.8l3.4-3.3C17.9 1.2 15.2 0 12 0 7.3 0 3.2 2.7 1.1 6.5l4 3.1c1-2.9 3.7-4.9 6.9-4.9z"
-              />
-            </svg>
-            Login with Google
-          </button>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
             New here?{" "}
