@@ -99,9 +99,9 @@ export const adminOverview = createServerFn({ method: "GET" })
       registeredAt: p.registered_at,
       members: Array.isArray(p.members)
         ? (p.members as Record<string, unknown>[]).map((m) => ({
-            name: String(m?.name ?? ""),
-            role: String(m?.role ?? ""),
-            email: String(m?.email ?? ""),
+            name: String(m?.["name"] ?? ""),
+            role: String(m?.["role"] ?? ""),
+            email: String(m?.["email"] ?? ""),
           }))
         : [],
     }));
