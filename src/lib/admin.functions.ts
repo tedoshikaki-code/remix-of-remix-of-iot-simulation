@@ -65,7 +65,11 @@ export type AdminOverview = {
 export const adminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await checkAdmin(context.supabase, context.userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Error("Forbidden: administrator access required");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const [profiles, messages, states] = await Promise.all([
@@ -144,7 +148,11 @@ export type AdminUser = {
 export const adminUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await checkAdmin(context.supabase, context.userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Error("Forbidden: administrator access required");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const [usersRes, rolesRes] = await Promise.all([
@@ -165,8 +173,8 @@ export const adminUsers = createServerFn({ method: "GET" })
       id: u.id,
       email: u.email ?? "",
       username:
-        typeof u.user_metadata?.username === "string"
-          ? (u.user_metadata.username as string)
+        typeof u.user_metadata?.["username"] === "string"
+          ? (u.user_metadata["username"] as string)
           : (u.email?.split("@")[0] ?? ""),
       createdAt: u.created_at ?? "",
       lastSignInAt: u.last_sign_in_at ?? null,
@@ -187,7 +195,11 @@ export const adminSetRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => setRoleInput.parse(data))
   .handler(async ({ context, data }) => {
-    await checkAdmin(context.supabase, context.userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Error("Forbidden: administrator access required");
     if (data.userId === context.userId && data.role === "admin" && !data.grant) {
       throw new Error("You cannot remove your own administrator role.");
     }
@@ -217,7 +229,11 @@ export const adminDeleteMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => deleteMessageInput.parse(data))
   .handler(async ({ context, data }) => {
-    await checkAdmin(context.supabase, context.userId);
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (roleError || !isAdmin) throw new Error("Forbidden: administrator access required");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("contact_messages").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
