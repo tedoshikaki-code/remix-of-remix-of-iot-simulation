@@ -4,28 +4,20 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 type AppRole = "admin" | "moderator" | "user";
 
-/** Server-side gate: only users holding the `admin` role may proceed. */
-async function checkAdmin(
-  supabase: { rpc: (fn: "has_role", args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }> },
-  userId: string,
-) {
-  const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-  if (error || !data) throw new Error("Forbidden: administrator access required");
-}
 
 /* --------------------------------- who am I -------------------------------- */
 
 export const adminMe = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.rpc("has_role", {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
     });
     return {
       userId: context.userId,
       email: typeof context.claims.email === "string" ? context.claims.email : null,
-      isAdmin: !error && !!data,
+      isAdmin: !roleError && !!isAdmin,
     };
   });
 
