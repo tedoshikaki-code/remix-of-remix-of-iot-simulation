@@ -28,18 +28,21 @@ const FIELD =
 function ContactPage() {
   const { update } = useStore();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [sending, setSending] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    update((s) => ({
-      ...s,
-      contactMessages: [
-        { id: uid(), ...form, at: new Date().toISOString() },
-        ...s.contactMessages,
-      ],
-    }));
-    toast.success("Message sent — we'll reply within 24 hours.");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    if (sending) return;
+    setSending(true);
+    try {
+      await sendContactMessage(form);
+      toast.success("Message sent — we'll reply within 24 hours.");
+      setForm({ name: "", email: "", subject: "", message: "" });
+ecord    } catch {
+      toast.error("Could not send the message. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
