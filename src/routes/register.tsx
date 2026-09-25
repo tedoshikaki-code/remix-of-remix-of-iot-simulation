@@ -54,10 +54,6 @@ function RegisterPage() {
         toast.error("Please fill all fields.");
         return;
       }
-      if (info.password.length < 6) {
-        toast.error("Password must be at least 6 characters.");
-        return;
-      }
       if (info.password !== info.confirm) {
         toast.error("Passwords do not match.");
         return;
