@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BASE_LEADERBOARD, computeStats, useStore } from "@/lib/store";
+import { computeStats, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/app/leaderboard")({
   head: () => ({
@@ -16,7 +16,6 @@ function Leaderboard() {
   const { state } = useStore();
   const stats = computeStats(state);
   const rows = [
-    ...BASE_LEADERBOARD,
     { team: state.team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved },
   ].sort((a, b) => b.score - a.score);
 
