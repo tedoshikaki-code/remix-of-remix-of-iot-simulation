@@ -21,6 +21,9 @@ export function SiteFooter() {
           <Link to="/faq" className="hover:text-foreground">
             FAQ
           </Link>
+          <Link to="/admin" className="text-xs hover:text-foreground">
+            Admin
+          </Link>
           <Github className="h-4 w-4" />
           <Youtube className="h-4 w-4" />
           <Twitter className="h-4 w-4" />
