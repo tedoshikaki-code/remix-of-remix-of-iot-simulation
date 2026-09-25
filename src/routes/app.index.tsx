@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Bell, CheckCircle2, CircuitBoard, Clock, ListChecks, Trophy } from "lucide-react";
+import { getLeaderboard } from "@/lib/leaderboard.functions";
 import {
   ANNOUNCEMENTS,
   EVENT_END,
