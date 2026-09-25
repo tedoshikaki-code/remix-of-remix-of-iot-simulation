@@ -59,8 +59,10 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
-    const username = form.username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
-    const email = `${username}@iotsimlab.admin`;
+    const raw = form.username.trim().toLowerCase();
+    const email = raw.includes("@")
+      ? raw
+      : `${raw.replace(/[^a-z0-9._-]/g, "")}@iotsimlab.app`;
     const { error } = await supabase.auth.signInWithPassword({ email, password: form.password });
     if (error) {
       setBusy(false);
