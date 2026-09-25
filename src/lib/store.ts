@@ -581,16 +581,6 @@ export const ANNOUNCEMENTS: Announcement[] = [
   },
 ];
 
-export const BASE_LEADERBOARD = [
-  { team: "Team Innovators", score: 92.4, solved: 7 },
-  { team: "Code Warriors", score: 89.1, solved: 7 },
-  { team: "Tech Titans", score: 85.6, solved: 6 },
-  { team: "Circuit Breakers", score: 82.3, solved: 6 },
-  { team: "Nova Makers", score: 74.2, solved: 5 },
-  { team: "Byte Force", score: 71.8, solved: 5 },
-  { team: "Sensor Squad", score: 68.4, solved: 4 },
-  { team: "Logic Loop", score: 63.9, solved: 4 },
-];
 
 export const EVENT_END = "2026-12-31T23:59:59";
 

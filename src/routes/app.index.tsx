@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Bell, CheckCircle2, CircuitBoard, Clock, ListChecks, Trophy } from "lucide-react";
 import {
   ANNOUNCEMENTS,
-  BASE_LEADERBOARD,
   EVENT_END,
   PROBLEMS,
   computeStats,
@@ -47,9 +46,7 @@ function Dashboard() {
   const t = useCountdown();
   const team = state.team;
 
-  const board = [...BASE_LEADERBOARD, { team: team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved }]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6);
+  const board = [{ team: team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved }];
 
   return (
     <div className="space-y-6">
