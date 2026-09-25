@@ -8,6 +8,13 @@
       "when": 1790310749545,
       "tag": "0000_create_participant_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790313113599,
+      "tag": "0001_create_admin_roles",
+      "breakpoints": true
     }
   ]
 }
