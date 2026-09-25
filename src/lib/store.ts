@@ -708,7 +708,7 @@ async function persist(state: AppState) {
   const user = auth.user;
   if (!user) return;
 
-  const tasks: Promise<unknown>[] = [
+  const tasks = [
     supabase.from("participant_state").upsert({
       user_id: user.id,
       data: {
