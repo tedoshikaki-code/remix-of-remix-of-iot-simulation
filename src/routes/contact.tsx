@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { uid, useStore } from "@/lib/store";
+import { sendContactMessage, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -38,7 +38,7 @@ function ContactPage() {
       await sendContactMessage(form);
       toast.success("Message sent — we'll reply within 24 hours.");
       setForm({ name: "", email: "", subject: "", message: "" });
-ecord    } catch {
+    } catch {
       toast.error("Could not send the message. Please try again.");
     } finally {
       setSending(false);
