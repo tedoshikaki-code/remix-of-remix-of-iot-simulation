@@ -708,20 +708,17 @@ async function persist(state: AppState) {
   const user = auth.user;
   if (!user) return;
 
-  const tasks = [
-    supabase.from("participant_state").upsert({
-      user_id: user.id,
-      data: {
-        attempts: state.attempts,
-        simulations: state.simulations,
-        submissions: state.submissions,
-        activity: state.activity,
-      } as never,
-      updated_at: new Date().toISOString(),
-    }),
-  ];
-  if (state.team) tasks.push(supabase.from("profiles").upsert(teamToRow(user.id, state.team)));
-  await Promise.all(tasks);
+  await supabase.from("participant_state").upsert({
+    user_id: user.id,
+    data: {
+      attempts: state.attempts,
+      simulations: state.simulations,
+      submissions: state.submissions,
+      activity: state.activity,
+    } as never,
+    updated_at: new Date().toISOString(),
+  });
+  if (state.team) await supabase.from("profiles").upsert(teamToRow(user.id, state.team));
 }
 
 /** Reloads everything from the database and notifies all mounted components. */
