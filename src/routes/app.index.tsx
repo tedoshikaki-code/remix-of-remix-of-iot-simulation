@@ -46,7 +46,13 @@ function Dashboard() {
   const t = useCountdown();
   const team = state.team;
 
-  const board = [{ team: team?.teamName ?? "Your Team", score: stats.score, solved: stats.solved }];
+  const fetchBoard = useServerFn(getLeaderboard);
+  const boardQuery = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: () => fetchBoard(),
+    refetchInterval: 15000,
+  });
+  const board = boardQuery.data?.rows ?? [];
 
   return (
     <div className="space-y-6">
@@ -139,8 +145,14 @@ function Dashboard() {
             <Trophy className="h-4 w-4 text-cyan" /> Leaderboard
           </h2>
           <ul className="mt-4 space-y-3">
-            {board.map((r, i) => (
-              <li key={r.team} className="flex items-center justify-between text-sm">
+            {boardQuery.isLoading && (
+              <li className="text-sm text-muted-foreground">Loading…</li>
+            )}
+            {!boardQuery.isLoading && board.length === 0 && (
+              <li className="text-sm text-muted-foreground">No registered teams yet.</li>
+            )}
+            {board.slice(0, 5).map((r, i) => (
+              <li key={r.userId} className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-3">
                   <span className="font-mono text-xs text-muted-foreground">#{i + 1}</span>
                   {r.team}
